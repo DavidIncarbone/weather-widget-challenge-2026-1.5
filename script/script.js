@@ -1,6 +1,6 @@
 "use strict";
 
-// 1. Configurazione
+//  Configurazione
 const city = "New York";
 const countryCode = "US";
 const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`;
@@ -8,7 +8,7 @@ const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city
 // Stato globale per il meteo (usato per ripristinare il gradiente al ritorno sulla slide 0)
 let isDayGlobal = true;
 
-// 2. Helper Icone
+//. Helper Icone
 function weatherCodeToIcon(code, isDay) {
   if (code === 0) return isDay ? "fa-sun" : "fa-moon";
   if (code === 1 || code === 2) return isDay ? "fa-cloud-sun" : "fa-cloud-moon";
@@ -19,7 +19,7 @@ function weatherCodeToIcon(code, isDay) {
   return isDay ? "fa-sun" : "fa-moon";
 }
 
-// 3. Helper Formattazione Oraria
+//  Helper Formattazione Oraria
 function formatHour(dateString) {
   const d = new Date(dateString);
   let hours = d.getHours();
@@ -28,7 +28,7 @@ function formatHour(dateString) {
   return { hour: hours, ampm: ampm };
 }
 
-// 4. Templates (Gradi e AM/PM con dimensioni diverse)
+//  Templates (Gradi e AM/PM con dimensioni diverse)
 const templates = {
   hour: (temp, icon, time, ampm) => `
         <div class="hour-item">
@@ -50,7 +50,7 @@ const templates = {
         </div>`,
 };
 
-// 5. Inizializzazione Widget
+//  Inizializzazione Widget
 const initWidget = async () => {
   const app = document.getElementById("app");
 
@@ -82,11 +82,8 @@ const initWidget = async () => {
     dots[index].classList.add("active");
 
     if (index === 0) {
-      // Torniamo alla slide 0: ripristiniamo il gradiente immediatamente
       widget.classList.add(isDayGlobal ? "day" : "night");
     } else {
-      // Usciamo dalla slide 0: aspettiamo che lo scroll finisca (400ms)
-      // prima di pulire il gradiente di sfondo, così non c'è il "flash"
       setTimeout(() => {
         const currentIndex = Array.from(dots).findIndex((d) =>
           d.classList.contains("active"),
@@ -127,11 +124,10 @@ const initWidget = async () => {
       isDayGlobal,
     );
 
-    // Applica gradiente iniziale al widget
     widget.classList.add(isDayGlobal ? "day" : "night");
 
     // --- SLIDE 1 (Attuale) ---
-    // Applichiamo la classe day/night direttamente alla main-card per bloccare il colore dell'icona
+
     slides[0].innerHTML = `
             <div class="main-card ${isDayGlobal ? "day" : "night"}">
                 <div class="text-group">

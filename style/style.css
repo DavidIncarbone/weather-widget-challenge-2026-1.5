@@ -20,34 +20,10 @@ h1 {
 }
 
 /* WIDGET */
-/* .widget {
-  width: 400px;
-  overflow: hidden;
-  background: #fff;
-  border-radius: 30px;
-}
-.day {
-  background: linear-gradient(
-    to left,
-    #fff4cc 0%,
-     #ffffff 35%
-     
-  );
-  color: #2d3447;
-}
-.night {
-  background: linear-gradient(
-    to left,
-    #e6edff 0%,
-     #ffffff 50%
-      
-  );
-  color: #2d3447; 
-} */
 
 /* Il widget è il contenitore che gestisce lo sfondo */
 .widget {
-  width: 350px;
+  width: 450px;
   height: 180px;
   background-color: #ffffff; /* Sfondo base bianco per slide 2 e 3 */
   transition: background 0.6s ease; /* Transizione morbida del gradiente */
@@ -187,7 +163,7 @@ h1 {
 
 /* AM/PM più piccoli e grigi */
 .ampm-label {
-  font-size: 5px;
+  font-size: 8px;
   color: #b0b5c1;
   text-transform: uppercase;
   font-weight: 600;
