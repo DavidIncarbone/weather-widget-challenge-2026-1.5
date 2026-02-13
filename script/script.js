@@ -10,6 +10,9 @@ const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=$
 
 getCurrentWeatherData(); // Chiamata alla funzione per recuperare i dati meteo e aggiornare la pagina
 
+const name = document.getElementById("name"); // Selezione dell'elemento HTML per il nome della città
+const temp = document.getElementById("temp"); // Selezione dell'elemento HTML per la temperatura
+
 // *** FUNZIONI ***
 
 // Funzione per recuperare i dati meteo e aggiornare la pagina
@@ -24,3 +27,20 @@ function getCurrentWeatherData() {
       console.error("Errore nel recupero dei dati meteo:", err); // Log degli errori per debug
     });
 }
+
+const dots = document.querySelectorAll(".dot");
+const slides = document.querySelectorAll(".slide");
+
+dots.forEach((dot) => {
+  dot.addEventListener("click", () => {
+    const index = dot.dataset.slide;
+
+    // rimuovi active da tutti
+    slides.forEach((s) => s.classList.remove("active"));
+    dots.forEach((d) => d.classList.remove("active"));
+
+    // attiva selezionato
+    slides[index].classList.add("active");
+    dot.classList.add("active");
+  });
+});

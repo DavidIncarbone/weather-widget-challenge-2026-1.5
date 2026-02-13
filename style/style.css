@@ -1,7 +1,124 @@
-:root {
+/* :root {
   --color-grey: #f6f6f6;
 }
 
 body {
   background-color: var(--color-grey);
+} */
+
+h1 {
+  text-align: center;
+  font-size: 2.5em;
+  margin-top: 1em;
+}
+
+body {
+  background: #e9ecef;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.widget {
+  width: 360px;
+}
+
+.slider {
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  display: none;
+  animation: fade 0.4s ease;
+}
+
+.slide.active {
+  display: block;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.top-card {
+  background: #f6f6f6;
+  border-radius: 25px;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.top-card h1 {
+  font-size: 60px;
+  margin: 0;
+  color: #2d3748;
+}
+
+.top-card p {
+  margin: 0;
+  color: #888;
+}
+
+.icon {
+  font-size: 60px;
+}
+
+.card {
+  margin-top: 20px;
+  background: #f6f6f6;
+  border-radius: 25px;
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.hour,
+.day {
+  text-align: center;
+  color: #555;
+}
+
+.hour span,
+.day span {
+  font-weight: bold;
+}
+
+.hour div,
+.day div {
+  font-size: 22px;
+  margin: 8px 0;
+}
+
+.dots {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.dot {
+  height: 8px;
+  width: 8px;
+  margin: 5px;
+  background: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.dot.active {
+  background: #333;
+  transform: scale(1.2);
 }
