@@ -2,48 +2,48 @@
 console.clear();
 
 // Coordinate per Milano
-const city = "Milan";
-const countryCode = "IT";
+const city = "Coimbra";
+const countryCode = "PT";
 
 // URL Open-Meteo per previsioni orarie (temperature e condizioni)
 
-const geocoding = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&countryCode=${countryCode}&language=it`;
+const geocoding = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&countryCode=${countryCode}`;
 
 // helper per icone Open-Meteo
-function weatherCodeToIcon(code) {
-  switch (code) {
-    case 0:
-      return "☀️"; // sereno
-    case 1:
-    case 2:
-      return "🌤️"; // poco nuvoloso
-    case 3:
-      return "☁️"; // nuvoloso
-    case 61:
-    case 63:
-    case 65:
-      return "🌧️"; // pioggia
-    case 71:
-    case 73:
-    case 75:
-      return "❄️"; // neve
-    case 95:
-    case 96:
-    case 99:
-      return "⛈️"; // temporale
-    default:
-      return "☀️";
+function weatherCodeToIcon(code, isDay) {
+  // SERENO
+  if (code === 0) {
+    return isDay ? "☀️" : "🌙";
   }
+
+  // POCO NUVOLOSO
+  if (code === 1 || code === 2) {
+    return isDay ? "🌤️" : "☁️🌙";
+  }
+
+  // NUVOLOSO
+  if (code === 3) return "☁️";
+
+  // PIOGGIA
+  if ([61, 63, 65].includes(code)) return "🌧️";
+
+  // NEVE
+  if ([71, 73, 75].includes(code)) return "❄️";
+
+  // TEMPORALE
+  if ([95, 96, 99].includes(code)) return "⛈️";
+
+  return "☀️";
 }
 
 // helper HTML
 function hour(temp, icon, time, ampm) {
   return `
   <div class="hour">
-    <strong>${temp}</strong>
+    <small>${temp}</small>
     <div>${icon}</div>
-    <small>${time}</small>
-        <small>${ampm}</small>
+    <div><small>${time}</small></div>
+    <small style="color: #888;">${ampm}</small>
   </div>`;
 }
 
@@ -134,7 +134,9 @@ const initWidget = async () => {
     console.log("Dati Geocoding:", dataGeocoding);
     const lat = dataGeocoding.results[0].latitude;
     const lon = dataGeocoding.results[0].longitude;
-    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=Europe/Rome`;
+    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode,is_day&daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean
+&timezone=auto
+`;
     const res = await axios.get(openMeteoUrl);
     const data = res.data;
     console.log("Dati Open-Meteo:", data);
@@ -166,30 +168,21 @@ const initWidget = async () => {
       next5Hours.push({
         temp: Math.round(data.hourly.temperature_2m[idx]) + "°",
         icon: weatherCodeToIcon(data.hourly.weathercode[idx]),
-        time: formatted.hour,
+        time: `${formatted.hour}:00`,
         ampm: formatted.ampm,
       });
     }
     slides[1].innerHTML = `<div class="card">${next5Hours.map((h) => hour(h.temp, h.icon, h.time, h.ampm)).join("")}</div>`;
 
-    // --- Slide 2: prossimi 5 giorni (media giorno)
-    const dailyMap = {};
-    data.hourly.time.forEach((t, i) => {
-      const dayName = new Date(t).toLocaleDateString("it-IT", {
+    const next5Days = data.daily.time.slice(1, 6).map((date, i) => {
+      const avgTemp = Math.round(data.daily.temperature_2m_mean[i + 1]) + "°";
+
+      const dayName = new Date(date).toLocaleDateString("en-EN", {
         weekday: "short",
       });
-      if (!dailyMap[dayName]) dailyMap[dayName] = [];
-      dailyMap[dayName].push(data.hourly.temperature_2m[i]);
+
+      return day(avgTemp, "☀️", dayName);
     });
-
-    const next5Days = Object.entries(dailyMap)
-      .slice(0, 5)
-      .map(([dayName, temps]) => {
-        const avgTemp =
-          Math.round(temps.reduce((a, b) => a + b, 0) / temps.length) + "°";
-        return day(avgTemp, "☀️", dayName);
-      });
-
     slides[2].innerHTML = `<div class="card">${next5Days.join("")}</div>`;
   } catch (err) {
     console.error("Errore nel caricamento dati Open-Meteo:", err);

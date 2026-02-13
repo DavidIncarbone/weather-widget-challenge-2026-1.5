@@ -1,6 +1,10 @@
 /* GENERAL */
 
 body {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
   background: #e9ecef;
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
