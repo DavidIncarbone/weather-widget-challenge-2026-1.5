@@ -8,7 +8,7 @@ const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city
 // Stato globale per il meteo (usato per ripristinare il gradiente al ritorno sulla slide 0)
 let isDayGlobal = true;
 
-//. Helper Icone
+// Helper Icone
 function weatherCodeToIcon(code, isDay) {
   if (code === 0) return isDay ? "fa-sun" : "fa-moon";
   if (code === 1 || code === 2) return isDay ? "fa-cloud-sun" : "fa-cloud-moon";
