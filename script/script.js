@@ -1,14 +1,14 @@
 "use strict";
 
-// 1. Configurazione e Costanti
+// 1. Configurazione
 const city = "New York";
 const countryCode = "US";
 const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`;
 
-// Stato globale per ricordare se è giorno o notte per il gradiente
+// Stato globale per il meteo (usato per ripristinare il gradiente al ritorno sulla slide 0)
 let isDayGlobal = true;
 
-// 2. Helper per icone Font Awesome
+// 2. Helper Icone
 function weatherCodeToIcon(code, isDay) {
   if (code === 0) return isDay ? "fa-sun" : "fa-moon";
   if (code === 1 || code === 2) return isDay ? "fa-cloud-sun" : "fa-cloud-moon";
@@ -19,7 +19,7 @@ function weatherCodeToIcon(code, isDay) {
   return isDay ? "fa-sun" : "fa-moon";
 }
 
-// 3. Helper per formattazione oraria
+// 3. Helper Formattazione Oraria
 function formatHour(dateString) {
   const d = new Date(dateString);
   let hours = d.getHours();
@@ -28,14 +28,14 @@ function formatHour(dateString) {
   return { hour: hours, ampm: ampm };
 }
 
-// 4. Template HTML con gerarchia visiva
+// 4. Templates (Gradi e AM/PM con dimensioni diverse)
 const templates = {
   hour: (temp, icon, time, ampm) => `
         <div class="hour-item">
             <div class="temp-container">
                 <span class="temp-val">${temp}</span><span class="temp-deg">°</span>
             </div>
-            <i class="fa-solid ${icon}"></i>
+            <i class="fa-solid ${icon} icon-outline"></i>
             <span class="time-val">${time}</span>
             <span class="ampm-label">${ampm}</span>
         </div>`,
@@ -45,12 +45,12 @@ const templates = {
             <div class="temp-container">
                 <span class="temp-val">${temp}</span><span class="temp-deg">°</span>
             </div>
-            <i class="fa-solid ${icon}"></i>
+            <i class="fa-solid ${icon} icon-outline"></i>
             <span class="day-name">${name}</span>
         </div>`,
 };
 
-// 5. Logica Principale del Widget
+// 5. Inizializzazione Widget
 const initWidget = async () => {
   const app = document.getElementById("app");
 
@@ -74,18 +74,27 @@ const initWidget = async () => {
   const dots = app.querySelectorAll(".dot");
   const slides = app.querySelectorAll(".slide");
 
-  // Funzione per gestire lo scorrimento e i gradienti
+  // Funzione scorrimento con protezione del colore
   const showSlide = (index) => {
     container.style.transform = `translateX(-${index * 100}%)`;
 
     dots.forEach((d) => d.classList.remove("active"));
     dots[index].classList.add("active");
 
-    // Rimuove o aggiunge il gradiente solo se siamo sulla prima slide (index 0)
     if (index === 0) {
+      // Torniamo alla slide 0: ripristiniamo il gradiente immediatamente
       widget.classList.add(isDayGlobal ? "day" : "night");
     } else {
-      widget.classList.remove("day", "night");
+      // Usciamo dalla slide 0: aspettiamo che lo scroll finisca (400ms)
+      // prima di pulire il gradiente di sfondo, così non c'è il "flash"
+      setTimeout(() => {
+        const currentIndex = Array.from(dots).findIndex((d) =>
+          d.classList.contains("active"),
+        );
+        if (currentIndex !== 0) {
+          widget.classList.remove("day", "night");
+        }
+      }, 400);
     }
   };
 
@@ -94,10 +103,8 @@ const initWidget = async () => {
   });
 
   try {
-    // Recupero Coordinate
     const geoRes = await axios.get(geocodingUrl);
     if (!geoRes.data.results) throw new Error("Città non trovata");
-
     const {
       latitude: lat,
       longitude: lon,
@@ -105,29 +112,28 @@ const initWidget = async () => {
       country,
     } = geoRes.data.results[0];
 
-    // Recupero Meteo
     const weatherRes = await axios.get(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode,is_day&daily=temperature_2m_max,temperature_2m_mean,weathercode&timezone=auto`,
     );
     const data = weatherRes.data;
 
-    // --- SLIDE 1: ATTUALE ---
     const now = new Date();
     const hourIndex = data.hourly.time.findIndex((t) => new Date(t) >= now);
     const currentTemp = Math.round(data.hourly.temperature_2m[hourIndex]);
-    const isDayNow = data.hourly.is_day[hourIndex] === 1;
 
-    isDayGlobal = isDayNow; // Aggiorna lo stato globale
+    isDayGlobal = data.hourly.is_day[hourIndex] === 1;
     const currentIcon = weatherCodeToIcon(
       data.hourly.weathercode[hourIndex],
-      isDayNow,
+      isDayGlobal,
     );
 
-    // Applica gradiente iniziale
-    widget.classList.add(isDayNow ? "day" : "night");
+    // Applica gradiente iniziale al widget
+    widget.classList.add(isDayGlobal ? "day" : "night");
 
+    // --- SLIDE 1 (Attuale) ---
+    // Applichiamo la classe day/night direttamente alla main-card per bloccare il colore dell'icona
     slides[0].innerHTML = `
-            <div class="main-card">
+            <div class="main-card ${isDayGlobal ? "day" : "night"}">
                 <div class="text-group">
                     <span class="big-temp">${currentTemp}°</span>
                     <span class="location">${name}, ${country}</span>
@@ -138,7 +144,7 @@ const initWidget = async () => {
             </div>
         `;
 
-    // --- SLIDE 2: PROSSIME 5 ORE ---
+    // --- SLIDE 2 (Ore) ---
     let hoursHTML = "";
     for (let i = 0; i < 5; i++) {
       const idx = hourIndex + i;
@@ -156,7 +162,7 @@ const initWidget = async () => {
     }
     slides[1].innerHTML = `<div class="sub-card">${hoursHTML}</div>`;
 
-    // --- SLIDE 3: PROSSIMI 5 GIORNI ---
+    // --- SLIDE 3 (Giorni) ---
     let daysHTML = "";
     for (let i = 1; i <= 5; i++) {
       const date = data.daily.time[i];
@@ -172,10 +178,9 @@ const initWidget = async () => {
     }
     slides[2].innerHTML = `<div class="sub-card">${daysHTML}</div>`;
   } catch (err) {
-    console.error("Errore:", err);
+    console.error(err);
     slides[0].innerHTML = `<p style="padding: 20px;">Dati non disponibili</p>`;
   }
 };
 
-// Inizializzazione
 initWidget();
