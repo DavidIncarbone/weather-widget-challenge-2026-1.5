@@ -134,14 +134,14 @@ const initWidget = async () => {
     console.log("Dati Geocoding:", dataGeocoding);
     const lat = dataGeocoding.results[0].latitude;
     const lon = dataGeocoding.results[0].longitude;
-    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode,is_day&daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean
+    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode,is_day&daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean,weathercode
 &timezone=auto
 `;
     const res = await axios.get(openMeteoUrl);
     const data = res.data;
     console.log("Dati Open-Meteo:", data);
 
-    // --- Slide 0: meteo attuale (ora corrente reale)
+    // --- Slide 1: meteo attuale (ora corrente reale)
     const now = new Date();
     const nowTimestamp = now.getTime();
     const indexNow = data.hourly.time.findIndex(
@@ -160,7 +160,7 @@ const initWidget = async () => {
       </div>
     `;
 
-    // --- Slide 1: prossime 5 ore
+    // --- Slide 2: prossime 5 ore
     const next5Hours = [];
     for (let i = 0; i < 5; i++) {
       const idx = indexNow + i;
@@ -174,14 +174,19 @@ const initWidget = async () => {
     }
     slides[1].innerHTML = `<div class="card">${next5Hours.map((h) => hour(h.temp, h.icon, h.time, h.ampm)).join("")}</div>`;
 
+    // --- Slide 3: media prossimi 5 giorni
+
     const next5Days = data.daily.time.slice(1, 6).map((date, i) => {
       const avgTemp = Math.round(data.daily.temperature_2m_mean[i + 1]) + "°";
+
+      const weatherCode = data.daily.weathercode[i + 1];
+      const icon = weatherCodeToIcon(weatherCode);
 
       const dayName = new Date(date).toLocaleDateString("en-EN", {
         weekday: "short",
       });
 
-      return day(avgTemp, "☀️", dayName);
+      return day(avgTemp, icon, dayName);
     });
     slides[2].innerHTML = `<div class="card">${next5Days.join("")}</div>`;
   } catch (err) {
