@@ -2,13 +2,11 @@
 console.clear();
 
 // Coordinate per Milano
-const lat = 52.52437;
-const lon = 13.41053;
-const city = "Berlin";
-const countryCode = "DE";
+const city = "Milan";
+const countryCode = "IT";
 
 // URL Open-Meteo per previsioni orarie (temperature e condizioni)
-const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=Europe/Rome`;
+
 const geocoding = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&countryCode=${countryCode}&language=it`;
 
 // helper per icone Open-Meteo
@@ -116,12 +114,15 @@ slidesContainer.addEventListener("touchend", (e) => {
 // inizializzazione widget
 const initWidget = async () => {
   try {
-    const res = await axios.get(openMeteoUrl);
-    const data = res.data;
-    console.log("Dati Open-Meteo:", data);
     const resGeocoding = await axios.get(geocoding);
     const dataGeocoding = resGeocoding.data;
     console.log("Dati Geocoding:", dataGeocoding);
+    const lat = dataGeocoding.results[0].latitude;
+    const lon = dataGeocoding.results[0].longitude;
+    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=Europe/Rome`;
+    const res = await axios.get(openMeteoUrl);
+    const data = res.data;
+    console.log("Dati Open-Meteo:", data);
 
     // --- Slide 0: meteo attuale (ora corrente reale)
     const now = new Date();
