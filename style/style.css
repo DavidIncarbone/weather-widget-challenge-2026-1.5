@@ -1,16 +1,4 @@
-/* :root {
-  --color-grey: #f6f6f6;
-}
-
-body {
-  background-color: var(--color-grey);
-} */
-
-h1 {
-  text-align: center;
-  font-size: 2.5em;
-  margin-top: 1em;
-}
+/* GENERAL */
 
 body {
   background: #e9ecef;
@@ -19,45 +7,45 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  margin: 0;
 }
+
+h1 {
+  text-align: center;
+  font-size: 2.5em;
+  margin-top: 1em;
+}
+
+/* WIDGET */
 
 .widget {
   width: 360px;
+  overflow: hidden;
+  border-radius: 20px;
 }
 
-.slider {
-  position: relative;
-  overflow: hidden;
+.slides-container {
+  display: flex;
+  transition: transform 0.4s ease;
+  width: 100%;
 }
 
 .slide {
-  display: none;
-  animation: fade 0.4s ease;
-}
-
-.slide.active {
-  display: block;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.top-card {
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
   background: #f6f6f6;
   border-radius: 25px;
-  padding: 30px;
+  flex-shrink: 0;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* top-card */
+.top-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  padding: 30px;
 }
 
 .top-card h1 {
@@ -71,18 +59,11 @@ body {
   color: #888;
 }
 
-.icon {
-  font-size: 60px;
-}
-
+/* card per ore o giorni */
 .card {
   margin-top: 20px;
-  background: #f6f6f6;
-  border-radius: 25px;
-  padding: 25px;
   display: flex;
   justify-content: space-between;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 }
 
 .hour,
@@ -91,17 +72,13 @@ body {
   color: #555;
 }
 
-.hour span,
-.day span {
-  font-weight: bold;
-}
-
 .hour div,
 .day div {
   font-size: 22px;
   margin: 8px 0;
 }
 
+/* dots */
 .dots {
   text-align: center;
   margin-top: 12px;

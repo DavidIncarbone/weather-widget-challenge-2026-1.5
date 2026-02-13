@@ -5,92 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="script/script.js"></script>
+    <script type="module" src="script/script.js" defer></script>
     <title>Weather Widget Challenge 2026 1.5</title>
   </head>
   <body>
-    <div class="widget">
-      <!-- SLIDER -->
-      <div class="slider">
-        <!-- SLIDE 1 -->
-        <div class="slide active">
-          <div class="top-card">
-            <div>
-              <h1>23°</h1>
-              <p id="name">Coimbra, Portugal</p>
-            </div>
-            <div class="icon">☀️</div>
-          </div>
-        </div>
-
-        <!-- SLIDE 2 -->
-        <div class="slide">
-          <div class="card">
-            <div class="hour">
-              <span>21°</span>
-              <div>☀️</div>
-              <small>12:00 PM</small>
-            </div>
-            <div class="hour">
-              <span>20°</span>
-              <div>☀️</div>
-              <small>1:00 PM</small>
-            </div>
-            <div class="hour">
-              <span>20°</span>
-              <div>☁️</div>
-              <small>2:00 PM</small>
-            </div>
-            <div class="hour">
-              <span>19°</span>
-              <div>☁️</div>
-              <small>3:00 PM</small>
-            </div>
-            <div class="hour">
-              <span>18°</span>
-              <div>🌧️</div>
-              <small>4:00 PM</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- SLIDE 3 -->
-        <div class="slide">
-          <div class="card">
-            <div class="day">
-              <span>21°</span>
-              <div>☀️</div>
-              <small>Mon</small>
-            </div>
-            <div class="day">
-              <span>20°</span>
-              <div>☀️</div>
-              <small>Tue</small>
-            </div>
-            <div class="day">
-              <span>16°</span>
-              <div>☁️</div>
-              <small>Wed</small>
-            </div>
-            <div class="day">
-              <span>17°</span>
-              <div>☁️</div>
-              <small>Thu</small>
-            </div>
-            <div class="day">
-              <span>18°</span>
-              <div>🌧️</div>
-              <small>Fri</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- DOTS -->
-      <div class="dots">
-        <span class="dot active" data-slide="0"></span>
-        <span class="dot" data-slide="1"></span>
-        <span class="dot" data-slide="2"></span>
-      </div>
-    </div>
+    <div id="app"></div>
   </body>
 </html>
