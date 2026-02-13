@@ -37,13 +37,28 @@ function weatherCodeToIcon(code) {
 }
 
 // helper HTML
-function hour(temp, icon, time) {
+function hour(temp, icon, time, ampm) {
   return `
   <div class="hour">
     <strong>${temp}</strong>
     <div>${icon}</div>
     <small>${time}</small>
+        <small>${ampm}</small>
   </div>`;
+}
+
+function formatHour(dateString) {
+  const d = new Date(dateString);
+  let hours = d.getHours();
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0 -> 12
+
+  return {
+    hour: hours,
+    ampm: ampm,
+  };
 }
 
 function day(temp, icon, name) {
@@ -147,13 +162,15 @@ const initWidget = async () => {
     const next5Hours = [];
     for (let i = 0; i < 5; i++) {
       const idx = indexNow + i;
+      const formatted = formatHour(data.hourly.time[idx]);
       next5Hours.push({
         temp: Math.round(data.hourly.temperature_2m[idx]) + "°",
         icon: weatherCodeToIcon(data.hourly.weathercode[idx]),
-        time: new Date(data.hourly.time[idx]).getHours() + "h",
+        time: formatted.hour,
+        ampm: formatted.ampm,
       });
     }
-    slides[1].innerHTML = `<div class="card">${next5Hours.map((h) => hour(h.temp, h.icon, h.time)).join("")}</div>`;
+    slides[1].innerHTML = `<div class="card">${next5Hours.map((h) => hour(h.temp, h.icon, h.time, h.ampm)).join("")}</div>`;
 
     // --- Slide 2: prossimi 5 giorni (media giorno)
     const dailyMap = {};
