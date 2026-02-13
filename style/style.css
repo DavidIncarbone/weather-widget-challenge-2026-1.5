@@ -15,91 +15,181 @@ body {
 }
 
 h1 {
-  text-align: center;
   font-size: 2.5em;
   margin-top: 1em;
 }
 
 /* WIDGET */
-
-.widget {
-  width: 360px;
+/* .widget {
+  width: 400px;
   overflow: hidden;
-  border-radius: 20px;
+  background: #fff;
+  border-radius: 30px;
+}
+.day {
+  background: linear-gradient(
+    to left,
+    #fff4cc 0%,
+     #ffffff 35%
+     
+  );
+  color: #2d3447;
+}
+.night {
+  background: linear-gradient(
+    to left,
+    #e6edff 0%,
+     #ffffff 50%
+      
+  );
+  color: #2d3447; 
+} */
+
+/* Il widget è il contenitore che gestisce lo sfondo */
+.widget {
+  width: 350px;
+  height: 180px;
+  background-color: #ffffff; /* Sfondo base bianco per slide 2 e 3 */
+  transition: background 0.6s ease; /* Transizione morbida del gradiente */
+  position: relative;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+/* Gradiente attivo solo quando la classe è presente (Slide 0) */
+.widget.day {
+  background: linear-gradient(to left, #fff4cc 0%, #ffffff 35%);
+}
+
+.widget.night {
+  background: linear-gradient(to left, #e6edff 0%, #ffffff 35%);
+}
+
+/* Colore icone basato sulla classe del widget padre */
+.widget.day .main-sun {
+  color: #ffd633;
+}
+.widget.night .main-sun {
+  color: lightgray;
 }
 
 .slides-container {
   display: flex;
-  transition: transform 0.4s ease;
-  width: 100%;
+  transition: transform 0.4s ease-out;
+  align-items: center;
 }
-
 .slide {
   min-width: 100%;
   box-sizing: border-box;
-  padding: 20px;
-  background: #f6f6f6;
-  border-radius: 25px;
-  flex-shrink: 0;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 }
-
-/* top-card */
-.top-card {
+.main-card {
   display: flex;
   justify-content: space-between;
+  padding: 30px;
   align-items: center;
+}
+.big-temp {
+  font-size: 70px;
+  font-weight: bold;
+  display: block;
+  color: #2d3447;
+}
+.location {
+  color: #b0b5c1;
+}
+.main-sun {
+  font-size: 80px;
+  color: #ffd633;
+}
+.main-other {
+  font-size: 80px;
+  color: lightgray;
+}
+.sub-card {
+  display: flex;
+  justify-content: space-between;
   padding: 30px;
 }
-
-.top-card h1 {
-  font-size: 60px;
-  margin: 0;
-  color: #2d3748;
+.hour-item,
+.day-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.hour-item i,
+.day-item i {
+  color: #b0b5c1;
+  font-size: 20px;
 }
 
-.top-card p {
-  margin: 0;
-  color: #888;
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding-bottom: 15px;
+}
+.dot {
+  width: 5px;
+  height: 5px;
+  background: #eee;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.dot.active {
+  background: #2d3447;
+  border-radius: 5px;
 }
 
-/* card per ore o giorni */
-.card {
-  margin-top: 20px;
+.sub-card {
+  font-size: xx-small;
   display: flex;
   justify-content: space-between;
 }
 
-.hour,
-.day {
-  text-align: center;
-  color: #555;
+/* Container della temperatura per gestire il simbolo ° */
+.temp-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  color: #2d3447;
 }
 
-.hour div,
-.day div {
-  font-size: 22px;
+/* Il numero della temperatura */
+.temp-val {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Il simbolo del grado più piccolo */
+.temp-deg {
+  font-size: 8px;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+/* Icone medie */
+.hour-item i,
+.day-item i {
+  font-size: 18px;
+  color: transparent; /* Rende l'interno trasparente */
+  -webkit-text-stroke: 1.5px #b0b5c1; /* Crea il bordo grigio */
   margin: 8px 0;
 }
 
-/* dots */
-.dots {
-  text-align: center;
-  margin-top: 12px;
+/* Orario/Giorno */
+.time-val,
+.day-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2d3447;
 }
 
-.dot {
-  height: 8px;
-  width: 8px;
-  margin: 5px;
-  background: #ccc;
-  border-radius: 50%;
-  display: inline-block;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.dot.active {
-  background: #333;
-  transform: scale(1.2);
+/* AM/PM più piccoli e grigi */
+.ampm-label {
+  font-size: 5px;
+  color: #b0b5c1;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 2px;
 }
