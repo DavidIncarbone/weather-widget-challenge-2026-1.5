@@ -10,13 +10,17 @@ Un widget meteo elegante, minimale e interattivo ispirato al design moderno di i
 - **Geocoding**: Ricerca automatica delle coordinate basata sul nome della città.
 - **Sistema a Slide**:
   - **Slide 1**: Meteo attuale con gradiente dinamico (Giallo per il giorno, Blu per la notte).
-
-  ```markdown
-  ![Testo alternativo](img/Slide_1.png)
-
+  - 
+    <img width="400" height="200" alt="Slide_1" src="https://github.com/user-attachments/assets/16438be8-52c6-43f4-b0ae-edf824ccf34c" />
+    
   - **Slide 2**: Previsioni orarie per le prossime 5 ore.
+ 
+    <img width="400" height="200" alt="Slide_2" src="https://github.com/user-attachments/assets/3ced8c7f-e1b5-440b-8682-39e0dcc26014" />
 
   - **Slide 3**: Previsioni giornaliere per i prossimi 5 giorni.
+
+    <img width="400" height="200" alt="Slide_3" src="https://github.com/user-attachments/assets/2f62223b-7596-40c1-b46d-b099e67dd50a" />
+
   ```
 
 ## 🛠️ Tecnologie Utilizzate
